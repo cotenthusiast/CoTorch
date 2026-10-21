@@ -1,6 +1,4 @@
 # CoTorch
-A from-scratch machine learning framework exploring tensor computation, automatic differentiation, neural networks, and numerical optimisation.
-# CoTorch
 
 **A machine learning framework built from first principles.**
 
