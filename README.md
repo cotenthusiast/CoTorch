@@ -24,9 +24,10 @@ The initial focus is on building the core tensor and numerical computation primi
 
 The project is exploratory, and its scope will evolve as new components are implemented.
 
-## Related project
+## Related projects
 
-[CoInfer](https://github.com/cotenthusiast/CoInfer): An experimental ML inference engine exploring model execution and optimisation.
+- [CoInfer](https://github.com/cotenthusiast/CoInfer): An experimental ML inference engine exploring model execution and optimisation.
+- [CoHarness](https://github.com/cotenthusiast/CoHarness): An experimental AI coding-agent harness exploring model integration, tool calling, context management, and autonomous execution.
 
 ## License
 
