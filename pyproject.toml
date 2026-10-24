@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cotorch"
+version = "0.0.1"
+description = "An experimental, early-stage machine learning framework built from first principles."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+# No runtime dependencies: NumPy is a development/testing dependency only.
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/cotenthusiast/CoTorch"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "hypothesis",
+    "numpy",
+    "ruff",
+    "build",
+    "twine",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cotorch"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# importlib mode lets test files in different directories share a basename.
+addopts = ["-ra", "--strict-markers", "--import-mode=importlib"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
