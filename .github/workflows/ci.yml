@@ -1,0 +1,11 @@
+name: CoTorch-CI
+run-name: ${{ git'soTorch CI
+on: [push, pul_-equest]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: cmake -S cpp -B cpp/build
+      - run: cmake --build cpp/build
+      - run: ctest --test-dir cpp/build --output-on-failure
