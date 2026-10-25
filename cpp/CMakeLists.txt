@@ -24,10 +24,10 @@ else()
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# Lets `ctest` run the executables registered in tests/.
-enable_testing()
-add_subdirectory(tests)
-
 add_library(cotorch_matmul STATIC src/matmul.cpp)
 
 target_include_directories(cotorch_matmul PUBLIC include)
+
+# Lets `ctest` run the executables registered in tests/.
+enable_testing()
+add_subdirectory(tests)

@@ -5,7 +5,6 @@ __pycache__/
 *.so
 /lib/
 /lib64/
-build/
 dist/
 *.egg-info/
 *.egg
@@ -43,3 +42,4 @@ compile_commands.json
 .idea/
 .vscode/
 tempCodeRunnerFile.py
+tutor.txt
