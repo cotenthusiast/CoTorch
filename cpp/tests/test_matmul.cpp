@@ -7,23 +7,40 @@
 #include "cotorch/matmul.hpp"
 
 // Floats are not exact, so compare with a small tolerance instead of ==.
-static const float kTolerance = 1e-5f;
+static const float rTol = 1e-5f;
+static const float aTol = 1e-6f;
 
-// Returns true if both matrices have the same shape and every element matches.
+// Returns true if both matrices have the same shape and every element matches within tolerance.
 static bool matrices_equal(const Matrix& actual, const Matrix& expected)
 {
   if (actual.size() != expected.size())
     return false;
+
   for (std::size_t i = 0; i < actual.size(); i++)
   {
     if (actual[i].size() != expected[i].size())
       return false;
+
     for (std::size_t j = 0; j < actual[i].size(); j++)
     {
-      if (std::fabs(actual[i][j] - expected[i][j]) > kTolerance)
+      const float a = actual[i][j];
+      const float e = expected[i][j];
+
+      if (std::isnan(a) || std::isnan(e))
         return false;
+
+      if (std::isinf(a) || std::isinf(e))
+      {
+        if (a != e)
+          return false;
+      }
+      else if (std::fabs(a - e) > aTol + rTol * std::fabs(e))
+      {
+        return false;
+      }
     }
   }
+
   return true;
 }
 
