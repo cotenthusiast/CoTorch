@@ -26,6 +26,8 @@ endif()
 
 add_library(cotorch_matmul STATIC src/matmul.cpp)
 
+set_target_properties(cotorch_matmul PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_include_directories(cotorch_matmul PUBLIC include)
 
 # Lets `ctest` run the executables registered in tests/.
