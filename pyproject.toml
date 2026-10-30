@@ -1,6 +1,6 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["scikit-build-core", "pybind11"]
+build-backend = "scikit_build_core.build"
 
 [project]
 name = "cotorch"
@@ -30,9 +30,6 @@ dev = [
     "build",
     "twine",
 ]
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/cotorch"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

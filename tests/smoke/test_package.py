@@ -10,7 +10,7 @@ def test_version_matches_installed_metadata():
 
 
 def test_public_api_is_only_what_is_declared():
-    assert cotorch.__all__ == ["__version__"]
+    assert cotorch.__all__ == ["__version__", "matmul"]
 
 
 def test_numpy_is_not_a_runtime_dependency():

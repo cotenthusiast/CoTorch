@@ -10,7 +10,12 @@ jobs:
     runs-on: ${{ matrix.machine }}
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - run: uname -m
       - run: cmake -S cpp -B cpp/build
       - run: cmake --build cpp/build
       - run: ctest --test-dir cpp/build --output-on-failure
+      - run: python -m pip install ".[dev]"
+      - run: python -m pytest -v
