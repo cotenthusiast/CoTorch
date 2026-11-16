@@ -21,6 +21,11 @@ htmlcov/
 .ipynb_checkpoints/
 docs/_build/
 
+# ---- Benchmark results ----
+/benchmark_results/
+run_*.json
+run_*.jsonl
+
 # Virtual environments and local secrets
 .venv/
 venv/

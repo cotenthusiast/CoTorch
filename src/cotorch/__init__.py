@@ -2,7 +2,7 @@
 
 from importlib.metadata import version
 
-from ._core import matmul
+from ._core import benchmark_matmul, matmul
 
 __version__ = version("cotorch")
 
