@@ -10,11 +10,14 @@ import cotorch
 
 parser = argparse.ArgumentParser(
     prog="Benchmark Tool",
-    description="Bnechmark harness to measure matmul performance",
+    description="Benchmark harness to measure matmul performance",
 )
 parser.add_argument("-n", "--iterations", type=int, required=True)
 parser.add_argument("-m", "--matrix_size", type=int, required=True)
 parser.add_argument("-s", "--seed", default=42, type=int)
+parser.add_argument(
+    "-f", "--path", type=Path, help="Subfolder inside benchmark_results"
+)
 args = parser.parse_args()
 
 n, m, seed = args.iterations, args.matrix_size, args.seed
@@ -32,8 +35,16 @@ npm2 = np.array(m2)
 npresult = npm1 @ npm2
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-results_dir = Path(__file__).resolve().parent.parent / "benchmark_results"
-results_dir.mkdir(exist_ok=True)
+base_dir = (Path(__file__).resolve().parent.parent / "benchmark_results").resolve()
+results_dir = base_dir
+if args.path is not None:
+    if args.path.is_absolute():
+        parser.error("--path must be relative to benchmark_results")
+    results_dir = (base_dir / args.path).resolve()
+    if not results_dir.is_relative_to(base_dir):
+        parser.error("--path must stay inside benchmark_results")
+results_dir.mkdir(parents=True, exist_ok=True)
+
 filename = results_dir / f"run_{timestamp}.json"
 results = []
 
