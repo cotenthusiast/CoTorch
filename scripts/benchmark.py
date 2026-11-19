@@ -16,9 +16,7 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("-n", "--iterations", type=int, required=True)
     parser.add_argument("-m", "--matrix_size", type=int, required=True)
     parser.add_argument("-s", "--seed", default=42, type=int)
-    parser.add_argument(
-        "-f", "--path", type=Path, help="Subfolder inside benchmark_results"
-    )
+    parser.add_argument("-f", "--path", type=Path, help="Subfolder inside benchmarks")
     args = parser.parse_args(argv)
 
     if args.iterations <= 0:
@@ -35,14 +33,14 @@ def make_inputs(m: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
 
 
 def resolve_results_dir(subpath: Path | None) -> Path:
-    base_dir = (Path(__file__).resolve().parent.parent / "benchmark_results").resolve()
+    base_dir = (Path(__file__).resolve().parent.parent / "benchmarks").resolve()
     results_dir = base_dir
     if subpath is not None:
         if subpath.is_absolute():
-            raise ValueError("--path must be relative to benchmark_results")
+            raise ValueError("--path must be relative to benchmarks")
         results_dir = (base_dir / subpath).resolve()
         if not results_dir.is_relative_to(base_dir):
-            raise ValueError("--path must stay inside benchmark_results")
+            raise ValueError("--path must stay inside benchmarks")
     results_dir.mkdir(parents=True, exist_ok=True)
     return results_dir
 
