@@ -26,6 +26,10 @@ docs/_build/
 run_*.json
 run_*.jsonl
 
+# Personal scripts
+/scripts/profiling.sh
+/scripts/plot_benchmark.py
+
 # Virtual environments and local secrets
 .venv/
 venv/
