@@ -7,6 +7,9 @@ import numpy as np
 
 import cotorch
 
+BENCHMARKS_DIR = (Path(__file__).resolve().parent.parent / "benchmarks").resolve()
+RESULTS_DIR = BENCHMARKS_DIR / "results"
+
 
 def parse_args(argv=None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -33,16 +36,27 @@ def make_inputs(m: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
 
 
 def resolve_results_dir(subpath: Path | None) -> Path:
-    base_dir = (Path(__file__).resolve().parent.parent / "benchmarks").resolve()
-    results_dir = base_dir
-    if subpath is not None:
+    if subpath is None:
+        results_dir = RESULTS_DIR
+    else:
         if subpath.is_absolute():
             raise ValueError("--path must be relative to benchmarks")
-        results_dir = (base_dir / subpath).resolve()
-        if not results_dir.is_relative_to(base_dir):
+        results_dir = (BENCHMARKS_DIR / subpath).resolve()
+        if not results_dir.is_relative_to(BENCHMARKS_DIR):
             raise ValueError("--path must stay inside benchmarks")
+        if results_dir == BENCHMARKS_DIR:
+            raise ValueError("--path must be a subfolder of benchmarks")
     results_dir.mkdir(parents=True, exist_ok=True)
     return results_dir
+
+
+def run_cotorch_naive(m1, m2): ...
+
+
+def run_numpy(m1, m2): ...
+
+
+KERNELS = {"naive": run_cotorch_naive, "numpy": run_numpy}
 
 
 def run_benchmark(n: int, m1: np.ndarray, m2: np.ndarray) -> list[dict[str, float]]:
@@ -84,3 +98,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# TODO add functionaility for multiple sizes to be input
