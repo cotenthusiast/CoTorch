@@ -1,5 +1,6 @@
 import argparse
 import json
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -20,6 +21,7 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("-m", "--matrix_size", type=int, required=True)
     parser.add_argument("-s", "--seed", default=42, type=int)
     parser.add_argument("-f", "--path", type=Path, help="Subfolder inside benchmarks")
+    parser.add_argument("-k", "--kernel", choices=KERNELS.keys(), default="naive")
     args = parser.parse_args(argv)
 
     if args.iterations <= 0:
@@ -50,22 +52,27 @@ def resolve_results_dir(subpath: Path | None) -> Path:
     return results_dir
 
 
-def run_cotorch_naive(m1, m2): ...
+def run_cotorch_naive(m1, m2):
+    return cotorch.benchmark_matmul(m1.tolist(), m2.tolist())
 
 
-def run_numpy(m1, m2): ...
+def run_numpy(m1, m2):
+    t0 = time.perf_counter()
+    c = m1 @ m2
+    t = time.perf_counter() - t0
+    return c, {"allocation": None, "initialization": None, "multiplication": t * 1000}
 
 
 KERNELS = {"naive": run_cotorch_naive, "numpy": run_numpy}
 
 
-def run_benchmark(n: int, m1: np.ndarray, m2: np.ndarray) -> list[dict[str, float]]:
-    pm1 = m1.tolist()
-    pm2 = m2.tolist()
+def run_benchmark(
+    kernel, n: int, m1: np.ndarray, m2: np.ndarray
+) -> list[dict[str, float]]:
     reference = m1 @ m2
     results = []
     for _ in range(n):
-        result = cotorch.benchmark_matmul(pm1, pm2)
+        result = kernel(m1, m2)
         if not np.allclose(np.array(result[0]), reference, rtol=1e-4, atol=1e-6):
             raise ValueError("Matmul output is incorrect")
         results.append(result[1])
@@ -85,14 +92,16 @@ def write_results(
 def main():
     args = parse_args()
     metadata = {
+        "kernel": args.kernel,
         "matrix_size": args.matrix_size,
         "iterations": args.iterations,
         "seed": args.seed,
+        "time_unit": "ms",
         "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S_%f"),
     }
     m1, m2 = make_inputs(metadata["matrix_size"], metadata["seed"])
     path = resolve_results_dir(args.path)
-    timings = run_benchmark(metadata["iterations"], m1, m2)
+    timings = run_benchmark(KERNELS[args.kernel], metadata["iterations"], m1, m2)
     write_results(path, metadata, timings)
 
 
